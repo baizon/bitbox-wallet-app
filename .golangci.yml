@@ -136,8 +136,14 @@ issues:
         - gocritic
       text: "badCond: `ours == from && ours == to` condition is suspicious"
     - linters:
+        - gocritic
+      text: "builtinShadow: shadowing of predeclared identifier: max"
+    - linters:
         - canonicalheader
       text: "non-canonical header \"X-API-KEY\", instead use: \"X-Api-Key\""
+    - linters:
+        - testifylint
+      text: "go-require: require must only be used in the goroutine running the test function"
     # In addition to always disalbed linters above, exclude some more in tests.
     - path: _test\.go
       linters:

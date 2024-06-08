@@ -42,9 +42,7 @@ func TestPriceAt(t *testing.T) {
 		{7.25, time.Date(2020, 9, 3, 18, 0, 0, 0, time.UTC)},
 	}
 	for _, test := range tt {
-		assert.Equal(t,
-			test.wantValue,
-			updater.HistoricalPriceAt("btc", "USD", test.at), "at = %s", test.at)
+		assert.InDelta(t, test.wantValue, updater.HistoricalPriceAt("btc", "USD", test.at), 0, "at = %s", test.at)
 	}
 }
 
@@ -216,7 +214,7 @@ func TestReconfigureHistoryLoadsFromDB(t *testing.T) {
 	// assert.Equal(t, nil, updater2.history["btcUSD"])
 	for _, rate := range sampleRates {
 		v := updater2.HistoricalPriceAt("btc", "USD", rate.timestamp)
-		assert.Equal(t, rate.value, v, "PriceAt(btc, USD, %d)", rate.timestamp.Unix())
+		assert.InDelta(t, rate.value, v, 0, "PriceAt(btc, USD, %d)", rate.timestamp.Unix())
 	}
 }
 

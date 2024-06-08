@@ -103,12 +103,12 @@ func (s *testSuite) TestFormatAmount() {
 
 func (s *testSuite) TestToUnit() {
 	for _, isFee := range []bool{false, true} {
-		s.Require().Equal(float64(12.34568910), s.coin.ToUnit(
-			coin.NewAmountFromInt64(1234568910), isFee))
-		s.Require().Equal(float64(0), s.coin.ToUnit(
-			coin.NewAmountFromInt64(0), isFee))
-		s.Require().Equal(float64(0.00000001), s.coin.ToUnit(
-			coin.NewAmountFromInt64(1), isFee))
+		s.Require().InDelta(12.34568910, s.coin.ToUnit(
+			coin.NewAmountFromInt64(1234568910), isFee), 0)
+		s.Require().InDelta(0, s.coin.ToUnit(
+			coin.NewAmountFromInt64(0), isFee), 0)
+		s.Require().InDelta(0.00000001, s.coin.ToUnit(
+			coin.NewAmountFromInt64(1), isFee), 0)
 	}
 }
 
