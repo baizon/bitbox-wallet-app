@@ -144,6 +144,9 @@ issues:
     - linters:
         - testifylint
       text: "go-require: require must only be used in the goroutine running the test function"
+    - linters:
+        - testifylint
+      text: "go-require: do not use require in http handlers"
     # In addition to always disalbed linters above, exclude some more in tests.
     - path: _test\.go
       linters:
