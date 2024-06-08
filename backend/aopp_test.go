@@ -313,7 +313,7 @@ func TestAOPPSuccess(t *testing.T) {
 		params := defaultParams()
 		b.registerKeystore(makeKeystore(t, scriptTypeRef(signing.ScriptTypeP2WPKH), keystoreHelper.ExtendedPublicKey))
 		fingerprint, err := b.keystore.RootFingerprint()
-		require.Nil(t, err)
+		require.NoError(t, err)
 		b.SetWatchonly(fingerprint, true)
 		b.DeregisterKeystore()
 

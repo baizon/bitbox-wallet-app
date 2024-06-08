@@ -164,9 +164,9 @@ func TestInsuredAccountAddresses(t *testing.T) {
 	require.NoError(t, account.Initialize())
 
 	// check the number of available addresses for native and wrapped segwit.
-	require.Equal(t, len(account.GetUnusedReceiveAddresses()[0].Addresses), 20)
+	require.Len(t, account.GetUnusedReceiveAddresses()[0].Addresses, 20)
 	require.Equal(t, *account.GetUnusedReceiveAddresses()[0].ScriptType, signing.ScriptTypeP2WPKHP2SH)
-	require.Equal(t, len(account.GetUnusedReceiveAddresses()[1].Addresses), 20)
+	require.Len(t, account.GetUnusedReceiveAddresses()[1].Addresses, 20)
 	require.Equal(t, *account.GetUnusedReceiveAddresses()[1].ScriptType, signing.ScriptTypeP2WPKH)
 
 	// Create a new insured account.

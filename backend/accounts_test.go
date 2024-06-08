@@ -87,8 +87,8 @@ func TestAccounts(t *testing.T) {
 	b := newBackend(t, testnetDisabled, regtestDisabled)
 	defer b.Close()
 
-	require.Len(t, b.Accounts(), 0)
-	require.Len(t, b.Config().AccountsConfig().Accounts, 0)
+	require.Empty(t, b.Accounts())
+	require.Empty(t, b.Config().AccountsConfig().Accounts)
 
 	// 1) Registering a new keystore persists a set of initial default accounts.
 	b.registerKeystore(ks)
