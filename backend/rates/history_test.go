@@ -189,7 +189,7 @@ func TestDumpLoadHistoryBucket(t *testing.T) {
 	defer updater2.Stop()
 	rates, err := updater2.loadHistoryBucket("btcUSD")
 	require.NoError(t, err, "updater2.loadHistoryBucket")
-	assert.Equal(t, 4, len(rates), "len(rates)")
+	assert.Len(t, rates, 4, "len(rates)")
 }
 
 func TestReconfigureHistoryLoadsFromDB(t *testing.T) {
@@ -256,6 +256,6 @@ func BenchmarkLoadHistoryBucket(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		rates, err := updater2.loadHistoryBucket("btcUSD")
 		require.NoError(b, err, "updater.loadHistoryBucket")
-		require.Equal(b, 5000, len(rates), "len(rates)")
+		require.Len(b, rates, 5000, "len(rates)")
 	}
 }

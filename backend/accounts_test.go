@@ -670,7 +670,7 @@ func TestCreateAndPersistAccountConfig(t *testing.T) {
 		)
 		require.NoError(t, err)
 		require.Nil(t, b.Config().AccountsConfig().Lookup("v0-55555555-eth-0"))
-		require.Equal(t, accountsCount, len(b.Config().AccountsConfig().Accounts))
+		require.Len(t, b.Config().AccountsConfig().Accounts, accountsCount)
 
 		// Try to add another Bitcoin account - can't, only one account supported.
 		_, err = b.CreateAndPersistAccountConfig(
@@ -679,7 +679,7 @@ func TestCreateAndPersistAccountConfig(t *testing.T) {
 			bitbox01LikeKeystore,
 		)
 		require.Equal(t, errAccountLimitReached, errp.Cause(err))
-		require.Equal(t, accountsCount, len(b.Config().AccountsConfig().Accounts))
+		require.Len(t, b.Config().AccountsConfig().Accounts, accountsCount)
 
 		// Try to add another Litecoin account - can't, only one account supported.
 		_, err = b.CreateAndPersistAccountConfig(
@@ -688,7 +688,7 @@ func TestCreateAndPersistAccountConfig(t *testing.T) {
 			bitbox01LikeKeystore,
 		)
 		require.Equal(t, errAccountLimitReached, errp.Cause(err))
-		require.Equal(t, accountsCount, len(b.Config().AccountsConfig().Accounts))
+		require.Len(t, b.Config().AccountsConfig().Accounts, accountsCount)
 	})
 
 	// If the keystore cannot retrieve an xpub (e.g. USB communication error), no account should be

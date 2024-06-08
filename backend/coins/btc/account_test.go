@@ -180,8 +180,8 @@ func TestInsuredAccountAddresses(t *testing.T) {
 	require.NoError(t, account2.Initialize())
 
 	// native segwit is the only address type available.
-	require.Equal(t, len(account2.GetUnusedReceiveAddresses()), 1)
-	require.Equal(t, len(account2.GetUnusedReceiveAddresses()[0].Addresses), 20)
+	require.Len(t, account2.GetUnusedReceiveAddresses(), 1)
+	require.Len(t, account2.GetUnusedReceiveAddresses()[0].Addresses, 20)
 	require.Equal(t, signing.ScriptTypeP2WPKH, *account2.GetUnusedReceiveAddresses()[0].ScriptType)
 
 }
