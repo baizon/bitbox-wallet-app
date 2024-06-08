@@ -130,7 +130,7 @@ func (s *newTxSuite) buildUTXO(satoshis ...int64) map[wire.OutPoint]maketx.UTXO 
 func (s *newTxSuite) TestNewTxNoCoins() {
 	feePerKb := btcutil.Amount(0)
 	_, err := s.newTx(1, feePerKb, s.buildUTXO())
-	s.Require().Equal(s.T(), errors.ErrInsufficientFunds, errp.Cause(err))
+	s.Require().Equal(errors.ErrInsufficientFunds, errp.Cause(err))
 }
 
 func (s *newTxSuite) check(
@@ -147,14 +147,14 @@ func (s *newTxSuite) check(
 	tx := txProposal.Transaction
 
 	// Check invariants independent of the particular coin selection algorithm.
-	s.Require().Equal(s.T(), s.coin, txProposal.Coin)
+	s.Require().Equal(s.coin, txProposal.Coin)
 	var output *wire.TxOut
 	if expectedChange == 0 {
-		s.Require().Nil(s.T(), txProposal.ChangeAddress)
+		s.Require().Nil(txProposal.ChangeAddress)
 		s.Require().Len(tx.TxOut, 1)
 		output = tx.TxOut[0]
 	} else {
-		s.Require().Equal(s.T(), s.changeAddress, txProposal.ChangeAddress)
+		s.Require().Equal(s.changeAddress, txProposal.ChangeAddress)
 		s.Require().Len(tx.TxOut, 2)
 		var changeOutput *wire.TxOut
 		if bytes.Equal(s.changeAddress.PubkeyScript(), tx.TxOut[0].PkScript) {
@@ -165,21 +165,21 @@ func (s *newTxSuite) check(
 			output = tx.TxOut[0]
 		}
 		// Do we receive the correct change on the change address?
-		s.Require().Equal(s.T(), int64(expectedChange), changeOutput.Value)
-		s.Require().Equal(s.T(), s.changeAddress.PubkeyScript(), changeOutput.PkScript)
+		s.Require().Equal(int64(expectedChange), changeOutput.Value)
+		s.Require().Equal(s.changeAddress.PubkeyScript(), changeOutput.PkScript)
 	}
 	// Are we sending the right amount to the right recipient?
-	s.Require().Equal(s.T(), s.output(expectedAmount), output)
+	s.Require().Equal(s.output(expectedAmount), output)
 
 	for _, txIn := range tx.TxIn {
-		s.Require().Nil(s.T(), txIn.SignatureScript)
-		s.Require().Nil(s.T(), txIn.Witness)
+		s.Require().Nil(txIn.SignatureScript)
+		s.Require().Nil(txIn.Witness)
 		if s.coin == tbtc {
 			// RBF for btc
-			s.Require().Equal(s.T(), wire.MaxTxInSequenceNum-2, txIn.Sequence)
+			s.Require().Equal(wire.MaxTxInSequenceNum-2, txIn.Sequence)
 		} else {
 			// No RBF for other coins.
-			s.Require().Equal(s.T(), wire.MaxTxInSequenceNum, txIn.Sequence)
+			s.Require().Equal(wire.MaxTxInSequenceNum, txIn.Sequence)
 		}
 	}
 
@@ -202,14 +202,14 @@ func (s *newTxSuite) check(
 		feePerKb,
 		maketx.TstEstimateTxSize(inputConfigurations, len(output.PkScript), len(s.changeAddress.PubkeyScript())),
 		s.log) + expectedDustDonation
-	s.Require().Equal(s.T(), expectedFee, txFee)
-	s.Require().Equal(s.T(), expectedFee, txProposal.Fee)
-	s.Require().Equal(s.T(), expectedAmount, txProposal.Amount)
+	s.Require().Equal(expectedFee, txFee)
+	s.Require().Equal(expectedFee, txProposal.Fee)
+	s.Require().Equal(expectedAmount, txProposal.Amount)
 
 	// Check the coin selection related results.
 
 	// Check the selected coins match the expected selected coins.
-	s.Require().Equal(s.T(), len(tx.TxIn), len(selectedCoins))
+	s.Require().Equal(len(tx.TxIn), len(selectedCoins))
 	for i := range selectedCoins {
 		coin := s.outpoint(i)
 		found := false
@@ -239,7 +239,7 @@ func (s *newTxSuite) TestNewTxNoFee() {
 	feePerKb := btcutil.Amount(0)
 
 	_, err := s.newTx(1, feePerKb, s.buildUTXO())
-	s.Require().Equal(s.T(), errors.ErrInsufficientFunds, errp.Cause(err))
+	s.Require().Equal(errors.ErrInsufficientFunds, errp.Cause(err))
 
 	s.check(btcutil.Amount(1), feePerKb, s.buildUTXO(1), s.change(0), noDust, s.selectCoins(0))
 	s.check(btcutil.Amount(1), feePerKb, s.buildUTXO(1, 2), s.change(1), noDust, s.selectCoins(1))
@@ -269,32 +269,32 @@ func (s *newTxSuite) TestNewTxInsufficientFunds() {
 	feePerKb := btcutil.Amount(1000) // 1 sat / vbyte
 
 	_, err := s.newTx(amount, feePerKb, s.buildUTXO())
-	s.Require().Equal(s.T(), errors.ErrInsufficientFunds, errp.Cause(err))
+	s.Require().Equal(errors.ErrInsufficientFunds, errp.Cause(err))
 
 	// Using one coin.
 	_, err = s.newTx(amount, feePerKb, s.buildUTXO(mBTC))
-	s.Require().Equal(s.T(), errors.ErrInsufficientFunds, errp.Cause(err))
+	s.Require().Equal(errors.ErrInsufficientFunds, errp.Cause(err))
 	_, err = s.newTx(amount, feePerKb, s.buildUTXO(999*mBTC))
-	s.Require().Equal(s.T(), errors.ErrInsufficientFunds, errp.Cause(err))
+	s.Require().Equal(errors.ErrInsufficientFunds, errp.Cause(err))
 	// exact coin not enough, as fees need to be covered.
 	_, err = s.newTx(amount, feePerKb, s.buildUTXO(1000*mBTC))
-	s.Require().Equal(s.T(), errors.ErrInsufficientFunds, errp.Cause(err))
+	s.Require().Equal(errors.ErrInsufficientFunds, errp.Cause(err))
 	// One satoshi short of covering the amount and fee.
 	_, err = s.newTx(amount, feePerKb, s.buildUTXO(1000*mBTC+txSizeOneInput-1))
-	s.Require().Equal(s.T(), errors.ErrInsufficientFunds, errp.Cause(err))
+	s.Require().Equal(errors.ErrInsufficientFunds, errp.Cause(err))
 	// Just enough:
 	_, err = s.newTx(amount, feePerKb, s.buildUTXO(1000*mBTC+txSizeOneInput))
 	s.Require().NoError(err)
 
 	// Using two coins.
 	_, err = s.newTx(amount, feePerKb, s.buildUTXO(mBTC, mBTC))
-	s.Require().Equal(s.T(), errors.ErrInsufficientFunds, errp.Cause(err))
+	s.Require().Equal(errors.ErrInsufficientFunds, errp.Cause(err))
 	// exact coin not enough, as fees need to be covered.
 	_, err = s.newTx(amount, feePerKb, s.buildUTXO(mBTC, 999*mBTC))
-	s.Require().Equal(s.T(), errors.ErrInsufficientFunds, errp.Cause(err))
+	s.Require().Equal(errors.ErrInsufficientFunds, errp.Cause(err))
 	// One satoshi short of covering the amount and fee.
 	_, err = s.newTx(amount, feePerKb, s.buildUTXO(mBTC, 999*mBTC+txSizeTwoInputs-1))
-	s.Require().Equal(s.T(), errors.ErrInsufficientFunds, errp.Cause(err))
+	s.Require().Equal(errors.ErrInsufficientFunds, errp.Cause(err))
 	// Just enough:
 	_, err = s.newTx(amount, feePerKb, s.buildUTXO(mBTC, 999*mBTC+txSizeTwoInputs))
 	s.Require().NoError(err)

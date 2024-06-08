@@ -171,13 +171,13 @@ func (s *transactionsSuite) TestUpdateAddressHistorySingleTxReceive() {
 	})
 	balance, err := s.transactions.Balance()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), newBalance(expectedAmount, 0), balance)
+	s.Require().Equal(newBalance(expectedAmount, 0), balance)
 	utxo := &transactions.SpendableOutput{
 		TxOut: wire.NewTxOut(int64(expectedAmount), address.PubkeyScript()),
 	}
 	spendableOutputs, err := s.transactions.SpendableOutputs()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(),
+	s.Require().Equal(
 		map[wire.OutPoint]*transactions.SpendableOutput{
 			{Hash: tx1.TxHash(), Index: 0}: utxo,
 		},
@@ -186,7 +186,7 @@ func (s *transactionsSuite) TestUpdateAddressHistorySingleTxReceive() {
 	transactions, err := s.transactions.Transactions(func(blockchainpkg.ScriptHashHex) bool { return false })
 	s.Require().NoError(err)
 	s.Require().Len(transactions, 1)
-	s.Require().Equal(s.T(), expectedHeight, transactions[0].Height)
+	s.Require().Equal(expectedHeight, transactions[0].Height)
 }
 
 // TestSpendableOutputs checks that the utxo set is correct. Only confirmed (or unconfirmed outputs
@@ -195,7 +195,7 @@ func (s *transactionsSuite) TestSpendableOutputs() {
 	// Starts out empty.
 	spendableOutputs, err := s.transactions.SpendableOutputs()
 	s.Require().NoError(err)
-	s.Require().Empty(s.T(), spendableOutputs)
+	s.Require().Empty(spendableOutputs)
 	addresses, err := s.addressChain.EnsureAddresses()
 	s.Require().NoError(err)
 	address1 := addresses[0]
@@ -223,8 +223,8 @@ func (s *transactionsSuite) TestSpendableOutputs() {
 	s.Require().NoError(err)
 	// Two confirmed txs.
 	s.Require().Len(spendableOutputs, 2)
-	s.Require().Contains(s.T(), spendableOutputs, wire.OutPoint{Hash: tx12.TxHash(), Index: 0})
-	s.Require().Contains(s.T(), spendableOutputs, wire.OutPoint{Hash: tx22.TxHash(), Index: 0})
+	s.Require().Contains(spendableOutputs, wire.OutPoint{Hash: tx12.TxHash(), Index: 0})
+	s.Require().Contains(spendableOutputs, wire.OutPoint{Hash: tx22.TxHash(), Index: 0})
 	// Spend output generated from tx12 to an external address, the spend being unconfirmed => the
 	// output can't be spent anymore.
 	tx12Spend := newTx(tx12.TxHash(), 0, otherAddress, 1000)
@@ -237,8 +237,8 @@ func (s *transactionsSuite) TestSpendableOutputs() {
 	spendableOutputs, err = s.transactions.SpendableOutputs()
 	s.Require().NoError(err)
 	s.Require().Len(spendableOutputs, 1)
-	s.Require().NotContains(s.T(), spendableOutputs, wire.OutPoint{Hash: tx12.TxHash(), Index: 0})
-	s.Require().Contains(s.T(), spendableOutputs, wire.OutPoint{Hash: tx22.TxHash(), Index: 0})
+	s.Require().NotContains(spendableOutputs, wire.OutPoint{Hash: tx12.TxHash(), Index: 0})
+	s.Require().Contains(spendableOutputs, wire.OutPoint{Hash: tx22.TxHash(), Index: 0})
 	// Send output generated from tx22 to an internal address, unconfirmed. The new output needs to
 	// be spendable, as it is our own.
 	tx22Spend := newTx(tx22.TxHash(), 0, address2, 4000)
@@ -252,15 +252,15 @@ func (s *transactionsSuite) TestSpendableOutputs() {
 	s.Require().NoError(err)
 	s.Require().Len(spendableOutputs, 1)
 	// tx22 spent, not available anymore
-	s.Require().NotContains(s.T(), spendableOutputs, wire.OutPoint{Hash: tx22.TxHash(), Index: 0})
+	s.Require().NotContains(spendableOutputs, wire.OutPoint{Hash: tx22.TxHash(), Index: 0})
 	// Output from the spend tx address available.
-	s.Require().Contains(s.T(), spendableOutputs, wire.OutPoint{Hash: tx22Spend.TxHash(), Index: 0})
+	s.Require().Contains(spendableOutputs, wire.OutPoint{Hash: tx22Spend.TxHash(), Index: 0})
 }
 
 func (s *transactionsSuite) TestBalance() {
 	balance, err := s.transactions.Balance()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), newBalance(0, 0), balance)
+	s.Require().Equal(newBalance(0, 0), balance)
 	addresses, err := s.addressChain.EnsureAddresses()
 	s.Require().NoError(err)
 	address1 := addresses[0]
@@ -278,7 +278,7 @@ func (s *transactionsSuite) TestBalance() {
 	})
 	balance, err = s.transactions.Balance()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), newBalance(0, expectedAmount), balance)
+	s.Require().Equal(newBalance(0, expectedAmount), balance)
 	// Confirm it, plus another one incoming.
 	s.headersMock.On("VerifiedHeaderByHeight", 10).Return(nil, nil).Once()
 	s.updateAddressHistory(address1, []*blockchainpkg.TxInfo{
@@ -287,7 +287,7 @@ func (s *transactionsSuite) TestBalance() {
 	})
 	balance, err = s.transactions.Balance()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), newBalance(expectedAmount, expectedAmount2), balance)
+	s.Require().Equal(newBalance(expectedAmount, expectedAmount2), balance)
 	// Spend funds that came from tx1, first unconfirmed. Available balance decreases.
 	s.updateAddressHistory(address1, []*blockchainpkg.TxInfo{
 		{TXHash: blockchainpkg.TXHash(tx1.TxHash()), Height: 10},
@@ -296,7 +296,7 @@ func (s *transactionsSuite) TestBalance() {
 	})
 	balance, err = s.transactions.Balance()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), newBalance(0, expectedAmount2), balance)
+	s.Require().Equal(newBalance(0, expectedAmount2), balance)
 	// Confirm it.
 	s.headersMock.On("VerifiedHeaderByHeight", 10).Return(nil, nil).Once()
 	s.updateAddressHistory(address1, []*blockchainpkg.TxInfo{
@@ -306,7 +306,7 @@ func (s *transactionsSuite) TestBalance() {
 	})
 	balance, err = s.transactions.Balance()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), newBalance(0, expectedAmount2), balance)
+	s.Require().Equal(newBalance(0, expectedAmount2), balance)
 	// Spend the unconfirmed incoming tx to an internal address, unconfirmed (can't confirm until
 	// the first one is). The funds are still available as we own the unconfirmed output.
 	s.updateAddressHistory(address1, []*blockchainpkg.TxInfo{
@@ -317,7 +317,7 @@ func (s *transactionsSuite) TestBalance() {
 	})
 	balance, err = s.transactions.Balance()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), newBalance(expectedAmount2, 0), balance)
+	s.Require().Equal(newBalance(expectedAmount2, 0), balance)
 }
 
 func (s *transactionsSuite) TestRemoveTransaction() {
@@ -345,7 +345,7 @@ func (s *transactionsSuite) TestRemoveTransaction() {
 	})
 	balance, err := s.transactions.Balance()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), newBalance(2+10+34, 0), balance)
+	s.Require().Equal(newBalance(2+10+34, 0), balance)
 	// Remove tx3 from the history of address1. It is still referenced by address2, so the index
 	// does not change.
 	tx3Hash := tx3.TxHash()
@@ -355,7 +355,7 @@ func (s *transactionsSuite) TestRemoveTransaction() {
 	})
 	balance, err = s.transactions.Balance()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), newBalance(2+10+34, 0), balance)
+	s.Require().Equal(newBalance(2+10+34, 0), balance)
 	transactions, err := s.transactions.Transactions(func(blockchainpkg.ScriptHashHex) bool { return false })
 	s.Require().NoError(err)
 	s.Require().Len(transactions, 3)
@@ -365,7 +365,7 @@ func (s *transactionsSuite) TestRemoveTransaction() {
 	})
 	balance, err = s.transactions.Balance()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), newBalance(12+34, 0), balance)
+	s.Require().Equal(newBalance(12+34, 0), balance)
 	transactions, err = s.transactions.Transactions(func(blockchainpkg.ScriptHashHex) bool { return false })
 	s.Require().NoError(err)
 	s.Require().Len(transactions, 2)

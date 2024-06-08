@@ -42,18 +42,18 @@ func TestCertTestSuite(t *testing.T) {
 func (s *certTestSuite) TestNewRSAPrivateKey() {
 	privateKey, err := generateRSAPrivateKey()
 	s.Require().NoError(err)
-	s.Require().NotEmpty(s.T(), privateKey)
-	s.Require().NotEmpty(s.T(), privateKey.PublicKey)
+	s.Require().NotEmpty(privateKey)
+	s.Require().NotEmpty(privateKey.PublicKey)
 }
 
 func (s *certTestSuite) TestNewCertificate() {
 	privateKey, _ := generateRSAPrivateKey()
 	certificate, err := createSelfSignedCertificate(privateKey, s.log)
 	s.Require().NoError(err)
-	s.Require().NotEmpty(s.T(), certificate)
+	s.Require().NotEmpty(certificate)
 	x509Cert, err := x509.ParseCertificate(certificate)
 	s.Require().NoError(err)
-	s.Require().NotNil(s.T(), x509Cert)
+	s.Require().NotNil(x509Cert)
 	err = x509Cert.VerifyHostname("localhost")
 	s.Require().NoError(err)
 	s.Require().True(time.Now().After(x509Cert.NotBefore))
@@ -78,7 +78,7 @@ func (s *certTestSuite) TestSavingCertAsPEM() {
 	pemBytes, err := os.ReadFile(temporaryFile)
 	s.Require().NoError(err)
 	pemBlock, rest := pem.Decode(pemBytes)
-	s.Require().NotNil(s.T(), pemBlock)
-	s.Require().EqualValues(s.T(), certificate, pemBlock.Bytes)
-	s.Require().Empty(s.T(), rest)
+	s.Require().NotNil(pemBlock)
+	s.Require().EqualValues(certificate, pemBlock.Bytes)
+	s.Require().Empty(rest)
 }

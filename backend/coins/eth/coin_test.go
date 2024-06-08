@@ -63,32 +63,32 @@ func TestSuite(t *testing.T) {
 func (s *testSuite) TestFormatAmount() {
 
 	for _, isFee := range []bool{false, true} {
-		s.Require().Equal(s.T(),
+		s.Require().Equal(
 			"0.000000000000000001",
 			s.coin.FormatAmount(coin.NewAmountFromInt64(1), isFee),
 		)
-		s.Require().Equal(s.T(),
+		s.Require().Equal(
 			"0.000000000001",
 			s.coin.FormatAmount(coin.NewAmountFromInt64(1000000), isFee),
 		)
-		s.Require().Equal(s.T(),
+		s.Require().Equal(
 			"1",
 			s.coin.FormatAmount(coin.NewAmountFromInt64(1e18), isFee),
 		)
-		s.Require().Equal(s.T(),
+		s.Require().Equal(
 			"100",
 			s.coin.FormatAmount(coin.NewAmount(new(big.Int).Exp(big.NewInt(10), big.NewInt(20), nil)), isFee),
 		)
-		s.Require().Equal(s.T(),
+		s.Require().Equal(
 			"1.234",
 			s.coin.FormatAmount(coin.NewAmountFromInt64(1.234e18), isFee),
 		)
 	}
-	s.Require().Equal(s.T(),
+	s.Require().Equal(
 		"123456.789012345678",
 		s.ERC20Coin.FormatAmount(coin.NewAmountFromInt64(123456789012345678), false),
 	)
-	s.Require().Equal(s.T(),
+	s.Require().Equal(
 		"0.123456789012345678",
 		s.ERC20Coin.FormatAmount(coin.NewAmountFromInt64(123456789012345678), true),
 	)
@@ -100,16 +100,16 @@ func (s *testSuite) TestSetAmount() {
 	ratAmount3, _ := new(big.Rat).SetString("123")
 
 	for _, isFee := range []bool{false, true} {
-		s.Require().Equal(s.T(), "123123456789012345678",
+		s.Require().Equal("123123456789012345678",
 			s.coin.SetAmount(ratAmount1, isFee).BigInt().String())
-		s.Require().Equal(s.T(), "0",
+		s.Require().Equal("0",
 			s.coin.SetAmount(ratAmount2, isFee).BigInt().String())
-		s.Require().Equal(s.T(), "123000000000000000000",
+		s.Require().Equal("123000000000000000000",
 			s.coin.SetAmount(ratAmount3, isFee).BigInt().String())
 	}
-	s.Require().Equal(s.T(), "123123456789012345678",
+	s.Require().Equal("123123456789012345678",
 		s.ERC20Coin.SetAmount(ratAmount1, true).BigInt().String())
-	s.Require().Equal(s.T(), "123123456789012",
+	s.Require().Equal("123123456789012",
 		s.ERC20Coin.SetAmount(ratAmount1, false).BigInt().String())
 }
 
@@ -121,25 +121,25 @@ func (s *testSuite) TestParseAmount() {
 	s.Require().NoError(err)
 	intAmount, err := coinAmount.Int64()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), intWeiAmount, intAmount)
+	s.Require().Equal(intWeiAmount, intAmount)
 
 	coinAmount, err = s.coin.ParseAmount(ethAmount)
 	s.Require().NoError(err)
 	intAmount, err = coinAmount.Int64()
 	s.Require().NoError(err)
-	s.Require().Equal(s.T(), intWeiAmount, intAmount)
+	s.Require().Equal(intWeiAmount, intAmount)
 }
 
 func (s *testSuite) TestGetFormatUnit() {
-	s.Require().Equal(s.T(), "ETH", s.coin.GetFormatUnit(true))
-	s.Require().Equal(s.T(), "ETH", s.coin.GetFormatUnit(false))
-	s.Require().Equal(s.T(), "ETH", s.ERC20Coin.GetFormatUnit(true))
-	s.Require().Equal(s.T(), "TOK", s.ERC20Coin.GetFormatUnit(false))
+	s.Require().Equal("ETH", s.coin.GetFormatUnit(true))
+	s.Require().Equal("ETH", s.coin.GetFormatUnit(false))
+	s.Require().Equal("ETH", s.ERC20Coin.GetFormatUnit(true))
+	s.Require().Equal("TOK", s.ERC20Coin.GetFormatUnit(false))
 }
 
 func (s *testSuite) TestUnit() {
-	s.Require().Equal(s.T(), "ETH", s.coin.Unit(true))
-	s.Require().Equal(s.T(), "ETH", s.coin.Unit(false))
-	s.Require().Equal(s.T(), "ETH", s.ERC20Coin.Unit(true))
-	s.Require().Equal(s.T(), "TOK", s.ERC20Coin.Unit(false))
+	s.Require().Equal("ETH", s.coin.Unit(true))
+	s.Require().Equal("ETH", s.coin.Unit(false))
+	s.Require().Equal("ETH", s.ERC20Coin.Unit(true))
+	s.Require().Equal("TOK", s.ERC20Coin.Unit(false))
 }

@@ -74,7 +74,7 @@ func (s *addressChainTestSuite) TestGetUnused() {
 	for i := 0; i < 3; i++ {
 		unusedAddress, err := s.addresses.GetUnused()
 		s.Require().NoError(err)
-		s.Require().Equal(s.T(), newAddresses[:s.gapLimit], unusedAddress)
+		s.Require().Equal(newAddresses[:s.gapLimit], unusedAddress)
 	}
 	firstAddress := newAddresses[0]
 	// Need to call EnsureAddresses because the status of an address changed (first address is used).
@@ -85,8 +85,8 @@ func (s *addressChainTestSuite) TestGetUnused() {
 	s.Require().NoError(err)
 	unusedAddresses, err := s.addresses.GetUnused()
 	s.Require().NoError(err)
-	s.Require().NotEqual(s.T(), newAddresses[0], unusedAddresses[0])
-	s.Require().Equal(s.T(), newAddresses[1], unusedAddresses[0])
+	s.Require().NotEqual(newAddresses[0], unusedAddresses[0])
+	s.Require().Equal(newAddresses[1], unusedAddresses[0])
 }
 
 func (s *addressChainTestSuite) TestLookupByScriptHashHex() {
@@ -94,7 +94,7 @@ func (s *addressChainTestSuite) TestLookupByScriptHashHex() {
 	newAddresses, err := s.addresses.EnsureAddresses()
 	s.Require().NoError(err)
 	for _, address := range newAddresses {
-		s.Require().Equal(s.T(), address,
+		s.Require().Equal(address,
 			s.addresses.LookupByScriptHashHex(address.PubkeyScriptHashHex()))
 	}
 	firstAddress := newAddresses[0]
@@ -106,9 +106,9 @@ func (s *addressChainTestSuite) TestLookupByScriptHashHex() {
 	newAddresses, err = s.addresses.EnsureAddresses()
 	s.Require().NoError(err)
 	s.Require().Len(newAddresses, 1)
-	s.Require().Equal(s.T(),
+	s.Require().Equal(
 		newAddresses[0], s.addresses.LookupByScriptHashHex(newAddresses[0].PubkeyScriptHashHex()))
-	s.Require().Nil(s.T(), s.addresses.LookupByScriptHashHex(test.GetAddress(signing.ScriptTypeP2PKH).PubkeyScriptHashHex()))
+	s.Require().Nil(s.addresses.LookupByScriptHashHex(test.GetAddress(signing.ScriptTypeP2PKH).PubkeyScriptHashHex()))
 }
 
 func (s *addressChainTestSuite) TestEnsureAddresses() {
@@ -138,13 +138,13 @@ func (s *addressChainTestSuite) TestEnsureAddresses() {
 	}
 	s.Require().Len(newAddresses, s.gapLimit)
 	for index, address := range newAddresses {
-		s.Require().Equal(s.T(), uint32(index), address.Configuration.AbsoluteKeypath().ToUInt32()[1])
-		s.Require().Equal(s.T(), getPubKey(index), address.Configuration.PublicKey())
+		s.Require().Equal(uint32(index), address.Configuration.AbsoluteKeypath().ToUInt32()[1])
+		s.Require().Equal(getPubKey(index), address.Configuration.PublicKey())
 	}
 	// Address statuses are still the same, so calling it again won't produce more addresses.
 	addrs, err := s.addresses.EnsureAddresses()
 	s.Require().NoError(err)
-	s.Require().Empty(s.T(), addrs)
+	s.Require().Empty(addrs)
 
 	usedAddress := newAddresses[s.gapLimit-1]
 	s.isAddressUsed = func(addr *addresses.AccountAddress) bool {
@@ -153,7 +153,7 @@ func (s *addressChainTestSuite) TestEnsureAddresses() {
 	moreAddresses, err := s.addresses.EnsureAddresses()
 	s.Require().NoError(err)
 	s.Require().Len(moreAddresses, s.gapLimit)
-	s.Require().Equal(s.T(), uint32(s.gapLimit), moreAddresses[0].Configuration.AbsoluteKeypath().ToUInt32()[1])
+	s.Require().Equal(uint32(s.gapLimit), moreAddresses[0].Configuration.AbsoluteKeypath().ToUInt32()[1])
 
 	// Repeating it does not add more the unused addresses are the same.
 	addrs, err = s.addresses.EnsureAddresses()

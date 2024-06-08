@@ -80,11 +80,11 @@ func TestDBBTestSuite(t *testing.T) {
 }
 
 func (s *dbbTestSuite) TestNewDBBDevice() {
-	s.Require().Equal(s.T(), StatusUninitialized, s.dbb.Status())
+	s.Require().Equal(StatusUninitialized, s.dbb.Status())
 }
 
 func (s *dbbTestSuite) TestDeviceID() {
-	s.Require().Equal(s.T(), deviceID, s.dbb.Identifier())
+	s.Require().Equal(deviceID, s.dbb.Identifier())
 }
 
 func jsonArgumentMatcher(expected map[string]interface{}) interface{} {
@@ -110,7 +110,7 @@ func AssertPanicWithMessage(s *dbbTestSuite, expectedError string) {
 
 func (s *dbbTestSuite) TestSetPassword() {
 	s.Require().NoError(s.login())
-	s.Require().Equal(s.T(), StatusLoggedIn, s.dbb.Status())
+	s.Require().Equal(StatusLoggedIn, s.dbb.Status())
 }
 
 func (s *dbbTestSuite) login() error {
