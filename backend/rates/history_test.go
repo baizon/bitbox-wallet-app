@@ -166,9 +166,9 @@ func TestLoadDumpBucketUnusableDB(t *testing.T) {
 	updater := NewRateUpdater(nil, "/dev/null")
 	defer updater.Stop()
 	_, err1 := updater.loadHistoryBucket("foo")
-	assert.Error(t, err1, "loadHistoryBucket")
+	require.Error(t, err1, "loadHistoryBucket")
 	err2 := updater.dumpHistoryBucket("bar", nil)
-	assert.Error(t, err2, "dumpHistoryBucket")
+	require.Error(t, err2, "dumpHistoryBucket")
 }
 
 func TestDumpLoadHistoryBucket(t *testing.T) {
