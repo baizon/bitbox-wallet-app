@@ -165,9 +165,9 @@ func TestInsuredAccountAddresses(t *testing.T) {
 
 	// check the number of available addresses for native and wrapped segwit.
 	require.Len(t, account.GetUnusedReceiveAddresses()[0].Addresses, 20)
-	require.Equal(t, *account.GetUnusedReceiveAddresses()[0].ScriptType, signing.ScriptTypeP2WPKHP2SH)
+	require.Equal(t, signing.ScriptTypeP2WPKHP2SH, *account.GetUnusedReceiveAddresses()[0].ScriptType)
 	require.Len(t, account.GetUnusedReceiveAddresses()[1].Addresses, 20)
-	require.Equal(t, *account.GetUnusedReceiveAddresses()[1].ScriptType, signing.ScriptTypeP2WPKH)
+	require.Equal(t, signing.ScriptTypeP2WPKH, *account.GetUnusedReceiveAddresses()[1].ScriptType)
 
 	// Create a new insured account.
 	account2 := mockAccount(t, &config.Account{
@@ -182,7 +182,7 @@ func TestInsuredAccountAddresses(t *testing.T) {
 	// native segwit is the only address type available.
 	require.Equal(t, len(account2.GetUnusedReceiveAddresses()), 1)
 	require.Equal(t, len(account2.GetUnusedReceiveAddresses()[0].Addresses), 20)
-	require.Equal(t, *account2.GetUnusedReceiveAddresses()[0].ScriptType, signing.ScriptTypeP2WPKH)
+	require.Equal(t, signing.ScriptTypeP2WPKH, *account2.GetUnusedReceiveAddresses()[0].ScriptType)
 
 }
 

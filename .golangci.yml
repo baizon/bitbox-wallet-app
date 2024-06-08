@@ -71,7 +71,7 @@ linters:
     - bodyclose
     - dogsled
     - dupl
-    - err113 # can't switch to errors.Is due to GopherJS still on go1.12
+    - goerr113 # can't switch to errors.Is due to GopherJS still on go1.12
     - funlen
     - gochecknoglobals
     - gochecknoinits
@@ -106,7 +106,7 @@ linters:
     - errname
     - forbidigo
     - makezero
-    - mnd
+    - gomnd
     - nolintlint
     - gocyclo
     - interfacebloat

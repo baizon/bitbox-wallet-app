@@ -134,16 +134,16 @@ func (s *testSuite) TestParseAmount() {
 
 	s.coin.SetFormatUnit("BTC")
 	coinAmount, err := s.coin.ParseAmount(btcAmount)
-	s.Require().Equal(err, nil)
+	s.Require().NoError(err)
 	intAmount, err := coinAmount.Int64()
-	s.Require().Equal(err, nil)
+	s.Require().NoError(err)
 	s.Require().Equal(intSatAmount, intAmount)
 
 	s.coin.SetFormatUnit("sat")
 	coinAmount, err = s.coin.ParseAmount(satAmount)
-	s.Require().Equal(err, nil)
+	s.Require().NoError(err)
 	intAmount, err = coinAmount.Int64()
-	s.Require().Equal(err, nil)
+	s.Require().NoError(err)
 	s.Require().Equal(intSatAmount, intAmount)
 }
 

@@ -123,7 +123,7 @@ func TestFetchGeckoMarketRangeInvalidCoinFiat(t *testing.T) {
 		var updater RateUpdater
 		g := fixedTimeRange(time.Now().Add(-time.Hour), time.Now())
 		_, err := updater.fetchGeckoMarketRange(ctx, test.coin, test.fiat, g)
-		assert.Error(t, err, "fetchGeckoMarketRange(%q, %q) returned nil error", test.coin, test.fiat)
+		require.Error(t, err, "fetchGeckoMarketRange(%q, %q) returned nil error", test.coin, test.fiat)
 		cancel()
 	}
 }
