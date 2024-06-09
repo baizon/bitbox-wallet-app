@@ -24,8 +24,7 @@ export GORACE="halt_on_error=1"
 go build -mod=vendor ./...
 go test -race -mod=vendor ./... -count=1 -v
 golangci-lint --version
-# TODO: Add this check with golangci-lint v1.57.0
-# golangci-lint config verify
+golangci-lint config verify
 golangci-lint run
 
 npm --prefix=frontends/web install # needed to install dev dependencies.
